@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   #   	end
   #   end
   # end
-
+resources :users
   scope module: 'api' do
     namespace :v1 do
       resources :users
