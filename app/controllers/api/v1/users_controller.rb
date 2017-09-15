@@ -11,18 +11,38 @@ module Api::V1
     end
 
     def create
-      @user = User.new(user_params) 
+      @user = User.new(user_params)
       if @user.save
-        render json: {success: true, user: @user}, status: 200
+        image_url = URI.join(request.url, @user.photo.url)
+        render json: @user, serializer: UserSerializer,image_url: image_url, message: "Your are signed in successfully...",success: true,status: 200
+        # render json: {success: true, user: @user}, status: 200
       else
         render json: {success: false, error: "Error"}, status: 401
       end
     end
 
+    def update
+      @user = User.find(params[:id])
+      if @user.update(user_params)
+        render json: {success: true,user: @user},status: 200
+      else
+        render json: {success: false, error: "Error"},status: 401
+      end
+    end
+
+
+    def destroy
+      @user = User.find(params[:id])
+      if @user.destroy
+        render json: {success: true,user: @user},status: 200
+      else
+        render json: {success: false,error: "Error"},status: 401
+      end
+    end
 
     private 
       def user_params
-        params.require(:user).permit(:firstname,:lastname,:gender,:email)
+        params.permit(:firstname,:lastname,:gender,:email,:photo)
       end
   end
 end
