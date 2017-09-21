@@ -1,7 +1,7 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :firstname ,:lastname ,:gender ,:email,:photo
+  attributes :id, :firstname ,:lastname ,:gender ,:email, :user_photo
 
-  def photo
+  def user_photo
   	@instance_options[:image_url]
   end
 end

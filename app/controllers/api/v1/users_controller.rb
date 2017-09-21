@@ -7,7 +7,8 @@ module Api::V1
 
     def show
     	@user = User.find(params[:id])
-    	render json: @user
+      image_url = URI.join(request.url, @user.photo.url("medium"))
+      render json: @user, serializer: UserSerializer,image_url: image_url
     end
 
     def create
