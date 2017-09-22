@@ -5,15 +5,17 @@ module Api::V1
 
 	def create
 		resource = MUser.find_for_database_authentication(:email => params[:email])
-		return invalid_login_attempt unless resource
-		if resource.valid_password?(params[:password])
-			sign_in("user", resource)
+		if resource.present? &&  resource.valid_password?(params[:password])
+			#sign_in("user", resource)
 			resource.auth_token = resource.generate_auth_token
 			resource.save
-			render :json=> {:success=>true, :auth_token=>resource.auth_token,:message=>"Login sucessfully",:login_user => resource}
-		return
+			render :json=> {:success=>true, :auth_token=>resource.auth_token,:message=>"Login sucessfully",:login_user => resource }, status: 200
+		
+		else
+			#binding.pry
+			invalid_login_attempt
 		end
-		invalid_login_attempt
+
 	end
 
 	def destroy
@@ -23,7 +25,8 @@ module Api::V1
   protected
 	  def invalid_login_attempt
 	    warden.custom_failure!
-	    render :json=> {:success=>false, :message=>"Error with your login or password"}, :status=>401
+	    #binding.pry
+	    render :json=> {:success=>false, :message=>"Error with your login or password"},status: 400
 	  end
   end
 end
