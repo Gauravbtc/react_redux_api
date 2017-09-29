@@ -6,7 +6,6 @@ module Api::V1
 	def create
 		resource = MUser.find_for_database_authentication(:email => params[:email])
 		if resource.present? &&  resource.valid_password?(params[:password])
-			sign_in("user", resource)
 			resource.auth_token = resource.generate_auth_token
 			resource.save
 			render :json=> {:success=>true, :auth_token=>resource.auth_token,:message=>"Login sucessfully",:login_user => resource }, status: 200
@@ -25,9 +24,7 @@ module Api::V1
       user.save
       render json: {success: true,message: "Sign out sucessfully",user: user}      
       return
-    end
-		#user= MUser.find_by(:authentication_token=>request.headers['HTTP_AUTH_TOKEN'])
-		
+    end		
   end
 
   protected

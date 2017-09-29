@@ -1,8 +1,10 @@
 module Api::V1
   class UsersController < ApiController
     # GET /v1/users
+    before_action :verify_signed_in_user, only: [:index]
+ 
     def index
-      render json: User.all
+      render json: User.where(m_user_id: @muser.id)
     end
 
     def show
@@ -16,7 +18,6 @@ module Api::V1
       if @user.save
         image_url = URI.join(request.url, @user.photo.url)
         render json: @user, serializer: UserSerializer,image_url: image_url, message: "Your are signed in successfully...",success: true,status: 200
-        # render json: {success: true, user: @user}, status: 200
       else
         render json: {success: false, error: "Error"}, status: 401
       end
@@ -43,7 +44,16 @@ module Api::V1
 
     private 
       def user_params
-        params.permit(:firstname,:lastname,:gender,:email,:photo)
+        params.permit(:firstname,:lastname,:gender,:email,:photo,:m_user_id)
+      end
+
+      def verify_signed_in_user
+         @muser = MUser.find_by(:auth_token=>request.headers['HTTP_AUTH_TOKEN'])
+         if @muser.present?
+            return @muser
+          else
+            render json: {message: "Invalid Login"},status: 203
+         end
       end
   end
 end
