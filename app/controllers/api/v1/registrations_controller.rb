@@ -6,11 +6,13 @@ module Api::V1
     user = MUser.new(user_params)
     if user.save
       user.update(auth_token: user.generate_auth_token)
-      render :json=> user.as_json(:reg_user =>user, :message=>"Regestrion done"), :status=>201
+      render json: {success: true,message: "Regestrion done",user: user }, status: 200
       return
     else
       warden.custom_failure!
-      render :json=> user.errors, :status=>422
+      render json: {success: false,message: user.errors,user: nil }, status: 203
+      return
+      #render :json=> user.errors, :status=>422
     end
   end
     # Generic API stuff here
