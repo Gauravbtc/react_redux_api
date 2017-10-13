@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   scope module: 'api' do
     namespace :v1 do
-      get 'login_user', to: 'api#login_user'
+      get 'login_user' ,to: 'api#login_user'
       resources :users
       devise_for :m_users , :controllers => { sessions: 'api/v1/sessions',
                                              registrations: 'api/v1/registrations',
