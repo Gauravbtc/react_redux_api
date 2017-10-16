@@ -44,7 +44,7 @@ module Api::V1
 
     private 
       def user_params
-        params.permit(:firstname,:lastname,:gender,:email,:photo,:m_user_id)
+        params.permit(:firstname,:lastname,:gender,:email,:photo,:m_user_id,:role_id)
       end
 
       def verify_signed_in_user
