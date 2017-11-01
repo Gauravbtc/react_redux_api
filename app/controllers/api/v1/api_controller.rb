@@ -11,5 +11,13 @@ module Api::V1
     	end
     end
 
+    def get_role
+    	role = Role.all
+    	if role.present?
+    		render json: {sucess:true,role: role,message: "Role found"},status: 200
+    	else
+    		render json: {sucess:true,role: nil ,message: "Role Not found"},status: 203
+    	end
+    end
   end
 end
